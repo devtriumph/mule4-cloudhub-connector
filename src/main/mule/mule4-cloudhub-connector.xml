@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+    <flow name="mule4-cloudhub-connector-flow" doc:id="ddf16e61-d9fa-4acd-805b-1151059a2052" >
+        <http:listener doc:name="GET:/products" doc:id="cf1a8bbc-3783-4131-a220-fbceb64f48f2" config-ref="HTTP_Listener_config" path="/products"/>
+        <logger level="INFO" doc:name="Flow Start" doc:id="5a4f0b8e-818b-4c60-98a1-cfdac936a4f0" message='#["Flow Started"]'/>
+        <http:request method="GET" doc:name="Products API" doc:id="7e958723-9a83-4e1d-8ff3-c96218d7ff9f" config-ref="HTTP_Products_API" path="/products"/>
+        <logger level="INFO" doc:name="Log Response" doc:id="fa18b331-2508-47fc-ba0e-daaf3f2b8090" message="#[payload]"/>
+        <logger level="INFO" doc:name="Flow End" doc:id="cae5b665-8fab-443e-b050-a0bec43e4ce4" message='#["Flow Ended"]' />
+        <error-handler >
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="47a7523e-242d-4712-aecd-dd7df8c022c1" >
+                <logger level="INFO" doc:name="Log Error" doc:id="3b5353b5-fa8e-4f03-8ba1-743ac9a4ce4c" message="#[error.errorMessage]"/>
+                <cloudhub:create-notification doc:name="Create Error Notification" doc:id="76e5bda7-b695-44c9-bd3c-08aa480388fc" config-ref="CloudHub_Config" domain="${app.name}" priority="ERROR" transactionId="#[correlationId]">
+                    <cloudhub:message ><![CDATA[#["An Error occurred in Mule application. Please take an immediate action"]]]></cloudhub:message>
+                </cloudhub:create-notification>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+</mule>

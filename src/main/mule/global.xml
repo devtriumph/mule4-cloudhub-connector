@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+    <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="de135f8d-6ddb-4c36-8c53-76a7458ba6c3" >
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+     <http:request-config name="HTTP_Products_API" doc:name="HTTP Request configuration" doc:id="fe6b4952-1622-4945-a1d6-31dffa4b3cd0" >
+        <http:request-connection protocol="HTTPS" host="${productsAPI.host}" port="${productsAPI.port}" />
+    </http:request-config>
+    <configuration-properties doc:name="Configuration properties" doc:id="23651c54-f7c4-4033-a6d7-dd0eb1937d03" file="devtriumph-dev.yaml" />
+    <cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="22e61949-b62d-4e82-84ac-02a1e3dcb2cb" >
+        <cloudhub:connection username="${platform.username}" password="${platform.password}" environment="ff812d1c-7256-4cc7-a48e-b81d3b795290"/>
+    </cloudhub:config>
+</mule>
